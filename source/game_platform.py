@@ -740,8 +740,14 @@ def change_name(ACTIVE_GAME):
 
 
 def change_figure(ACTIVE_GAME):
-    for player in PLAYERS:
+    for player in theBoard.players:
+        old_figure = player.figure
         player.figure = input(player.name + " figure: ")
+        for node in theBoard.node_list:
+            if(node.figure == old_figure):
+                node.figure = player.figure
+            
+
     settings(ACTIVE_GAME)
 
 
