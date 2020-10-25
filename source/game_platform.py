@@ -237,25 +237,32 @@ class Board(metaclass=Singleton):
 
         return False
 
+    def removable_piece(self, player):
+        valid_pieces = []
+        for piece in player.pieces:
+            if self.check_mill(player, piece.pos) is False:
+                valid_pieces.append(piece.pos)
+        if len(valid_pieces) == 0:
+            for piece in player.pieces:
+                valid_pieces.append(piece.pos)
+        return valid_pieces
+
 
     def remove_piece(self, current_player):
         while True:
             try:
-
-                (piece_pos,msg) = self.get_input("Which piece do you want to remove?")
+                (piece_pos, msg) = self.get_input("Which piece do you want to remove?")
                 for player in self.players:
                     if player != current_player:
-                        if self.check_mill(player, piece_pos):
-                            print("Try another piece, that one is in a trio")
-                        else:
-
+                        if piece_pos in self.removable_piece(player):
                             selected_piece = Piece(piece_pos, player.name)
                             print(player.name)
                             player.pieces.remove(selected_piece)
                             self.node_list[piece_pos].figure = " "
                             self.node_list[piece_pos].empty = True
-                            self.print_board()
                             return msg
+                        else:
+                            print("Try another piece, that one is in a trio")
             except:
                 print("Not a valid location. Try Again!")
     
